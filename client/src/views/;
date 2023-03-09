@@ -2,23 +2,18 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import appicon from '@static/appicon.png';
 import useAuth from '@auth/useAuth';
-import Loading from '@views/Loading';
 
 const Main = () =>{
 	const navigate = useNavigate();
 	const {rol} = useAuth();
 
-	useEffect(() => {
-		if (rol === "RRPP") {
-			navigate('/rrpp');
-		} else if (rol === "Admin") {
-			navigate('/admin');
-		} else {
-			navigate('/bouncer');
-		}
-	},[]);
-
-	return <Loading/>
+	if (rol === "RRPP") {
+		navigate('/rrpp');
+	} else if (rol === "Admin") {
+		navigate('/admin');
+	} else {
+		navigate('/bouncer');
+	}
 
 	/*
 	return (

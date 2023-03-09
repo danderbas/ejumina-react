@@ -7,6 +7,7 @@ import styles from '@/styles';
 
 const NewUserForm = () => {
 	const [inputs, setInputs] = useState({});
+	const [validationErrors, setValidationErrors] = useState({});
 	//const [validationErrors, setValidationErrors] = useState([]);
 	const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ const NewUserForm = () => {
 		event.preventDefault();
 		console.log(inputs);
 
+		setValidationErrors({});
 		axios.post('http://localhost:8000/api/user/register',
 			{...inputs})
 			.then(res => {
@@ -36,6 +38,25 @@ const NewUserForm = () => {
 				//navigate('/movies');
 				setInputs([]);
 				navigate('/');
+			})
+			.catch(err => {
+				const errors = err.response.data.errors;
+				const errKeys = Object.keys(errors);
+				errKeys.map(key => {
+					const errMsg = errors[key].message;
+					console.log(key,errors[key].message);
+					setValidationErrors(values => ({...values, [key]: errMsg}));
+				})
+
+				//console.log(typeof(errors));//.map(i=>{console.log(i)});
+				/*
+				errors.map((key,val) => {
+					//const name = event.target.name;
+					//const value = event.target.value;
+					//setInputs(values => ({...values, [name]: value}));
+					console.log("key",key,"val",val);
+				});
+				*/
 			})
 		/*
 			.catch(err => {
@@ -66,6 +87,10 @@ const NewUserForm = () => {
 											 type={field.type}
 											 value={inputs[field.name] || ""}
 											 onChange={e=>handleChange(e)} />
+								{validationErrors[field.name] &&
+									<p className="text-xs text-red-500">
+										{validationErrors[field.name]}
+									</p>}
 							</td>
 						</tr>
 					);
@@ -85,6 +110,10 @@ const NewUserForm = () => {
 								<option key={r} value={r}>{r}</option>
 							))}
 						</select>
+						{validationErrors["rol"] &&
+							<p className="text-xs text-red-500">
+								{validationErrors["rol"]}
+							</p>}
 					</td>
 				</tr>
 				</tbody>

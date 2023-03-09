@@ -1,19 +1,23 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+import useAuth from '@auth/useAuth';
 import styles from '@/styles';
 
 const Invite = ({eventoId, setInvitadoCI, invitado, setInvitado, cantRemainingFreePasses}) => {
 	const navigate = useNavigate('/');
+	const { userId } = useAuth();
 	
-	const hardCodedRRPPId = "6404ccbde6269d6dd7870e64";
+	//const hardCodedRRPPId = "6404ccbde6269d6dd7870e64";
+
+
 	styles.freePassButton = "border-solid border-2 bg-gradient-to-r " +
 													"from-violet-500 to-fuchsia-50 border-purple-100 " + 
 													"rounded px-2 py-1"
 
 	const saveInvite = ({isFreePass}) => {
 		axios.post('http://localhost:8000/api/invitacion/new',
-			{rrpp: hardCodedRRPPId, invitado: invitado._id,
+			{rrpp: userId, invitado: invitado._id,
 				evento: eventoId, isFreePass})
 			.then(invitacion => {
 				// faltaria aca un mensajito de 2 segundos que me diga que esta todo ok
